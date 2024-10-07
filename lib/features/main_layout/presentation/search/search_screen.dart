@@ -1,6 +1,12 @@
 import 'package:flutter/material.dart';
-import '../services/api_service.dart';
-import 'movie_details_screen.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:movies_app/core/config/color_palette.dart';
+import 'package:movies_app/core/config/color_palette.dart';
+import 'package:movies_app/features/main_layout/domain/entities/movie_data.dart';
+import 'package:movies_app/features/main_layout/presentation/manager/main_layout_cubit.dart';
+import 'package:movies_app/features/main_layout/presentation/manager/main_layout_states.dart';
+import '../../../../services (will be deleted)/api_service.dart';
+import '../../../movie_screen/movie_details_screen.dart';
 
 class SearchScreen extends StatefulWidget {
   @override
@@ -9,8 +15,8 @@ class SearchScreen extends StatefulWidget {
 
 class _SearchScreenState extends State<SearchScreen> {
   final ApiService apiService = ApiService();
-  List<dynamic> searchResults = [];
-  List<dynamic> suggestedMovies = [];
+  List<MovieData> searchResults = [];
+  List<MovieData> suggestedMovies = [];
   TextEditingController searchController = TextEditingController();
 
   @override
@@ -21,9 +27,9 @@ class _SearchScreenState extends State<SearchScreen> {
 
   void fetchSuggestedMovies() async {
     try {
-      final suggestions = await apiService.fetchPopularMovies();
+      // final suggestions = await apiService.fetchPopularMovies();
       setState(() {
-        suggestedMovies = suggestions;
+        // suggestedMovies = suggestions;
       });
     } catch (e) {
       print('Error fetching suggested movies: $e');
@@ -35,7 +41,7 @@ class _SearchScreenState extends State<SearchScreen> {
       if (query.isNotEmpty) {
         final results = await apiService.searchMovies(query);
         setState(() {
-          searchResults = results;
+          // searchResults = results;
         });
       } else {
         setState(() {
@@ -49,12 +55,7 @@ class _SearchScreenState extends State<SearchScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('Search Movies', style: TextStyle(color: Colors.yellow)),
-        backgroundColor: Colors.black,
-      ),
-      body: Column(
+    return Column(
         children: [
           Padding(
             padding: const EdgeInsets.all(8.0),
@@ -63,7 +64,7 @@ class _SearchScreenState extends State<SearchScreen> {
               onChanged: searchMovies,
               decoration: InputDecoration(
                 hintText: 'Search for a movie...',
-                prefixIcon: Icon(Icons.search, color: Colors.yellow),
+                prefixIcon: const Icon(Icons.search, color: ColorPalette.primaryColor),
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(10),
                 ),
@@ -71,27 +72,28 @@ class _SearchScreenState extends State<SearchScreen> {
             ),
           ),
           Expanded(
-            child: searchResults.isNotEmpty
-                ? _buildMoviesList(searchResults)
-                : suggestedMovies.isNotEmpty
-                ? _buildSuggestedMoviesList(suggestedMovies)
-                : Center(
-                child: Text('No movies found',
-                    style: TextStyle(color: Colors.white))),
+            child: BlocBuilder<MainLayoutCubit, MainLayoutState>(
+              builder: (context, state) {
+                if(searchResults.isNotEmpty){
+                  return _buildMoviesList(searchResults);
+                } else {
+                  return _buildSuggestedMoviesList(context.read<MainLayoutCubit>().topRatedMovies);
+                }
+              },
+            ),
           ),
         ],
-      ),
-    );
+      );
   }
 
-  Widget _buildMoviesList(List<dynamic> movies) {
+  Widget _buildMoviesList(List<MovieData> movies) {
     return ListView.builder(
       itemCount: movies.length,
       itemBuilder: (context, index) {
         final movie = movies[index];
-        final posterPath = movie['poster_path'] ?? '';
-        final movieId = movie['id'] ?? 0;
-        final movieTitle = movie['title'] ?? 'Unknown Title';
+        final posterPath = movie.posterPath ?? '';
+        final movieId = movie.id ?? 0;
+        final movieTitle = movie.title ?? 'Unknown Title';
 
         if (movieId == 0) return Container();
 
@@ -99,10 +101,10 @@ class _SearchScreenState extends State<SearchScreen> {
           leading: posterPath.isNotEmpty
               ? Image.network(
             'https://image.tmdb.org/t/p/w92$posterPath',
-            errorBuilder: (context, error, stackTrace) => Icon(Icons.image_not_supported, color: Colors.white),
+            errorBuilder: (context, error, stackTrace) => const Icon(Icons.image_not_supported, color: Colors.white),
           )
-              : Icon(Icons.image_not_supported, color: Colors.white),
-          title: Text(movieTitle, style: TextStyle(color: Colors.white)),
+              : const Icon(Icons.image_not_supported, color: Colors.white),
+          title: Text(movieTitle, style: const TextStyle(color: Colors.white)),
           onTap: () {
             Navigator.push(
               context,
@@ -116,15 +118,15 @@ class _SearchScreenState extends State<SearchScreen> {
     );
   }
 
-  Widget _buildSuggestedMoviesList(List<dynamic> movies) {
+  Widget _buildSuggestedMoviesList(List<MovieData> movies) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Padding(
-          padding: const EdgeInsets.all(8.0),
+        const Padding(
+          padding: EdgeInsets.all(8.0),
           child: Text('Suggested Movies',
               style: TextStyle(
-                  color: Colors.yellow,
+                  color: ColorPalette.primaryColor,
                   fontSize: 18,
                   fontWeight: FontWeight.bold)),
         ),
@@ -135,8 +137,8 @@ class _SearchScreenState extends State<SearchScreen> {
             itemCount: movies.length,
             itemBuilder: (context, index) {
               final movie = movies[index];
-              final posterPath = movie['poster_path'] ?? '';
-              final movieId = movie['id'] ?? 0;
+              final posterPath = movie.posterPath ?? '';
+              final movieId = movie.id ?? 0;
 
               if (movieId == 0) return Container();
 
@@ -150,7 +152,7 @@ class _SearchScreenState extends State<SearchScreen> {
                   );
                 },
                 child: Container(
-                  margin: EdgeInsets.all(8.0),
+                  margin: const EdgeInsets.all(8.0),
                   width: 120,
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(10),

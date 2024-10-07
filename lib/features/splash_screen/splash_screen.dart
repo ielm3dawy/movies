@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
+import 'package:movies_app/core/config/page_route_names.dart';
 import 'package:movies_app/main.dart';
 
 class SplashScreen extends StatelessWidget {
@@ -7,11 +8,8 @@ class SplashScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     // استخدام WidgetsBinding للتأكد من تنفيذ Timer بعد بناء الواجهة
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      Timer(Duration(seconds: 3), () {
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(builder: (context) => MainScreen()),
-        );
+      Timer(const Duration(seconds: 2), () {
+        Navigator.pushReplacementNamed(context, PageRouteNames.mainLayout);
       });
     });
 
@@ -24,7 +22,7 @@ class SplashScreen extends StatelessWidget {
               fit: BoxFit.cover,
             ),
           ),
-          Center(
+          const Center(
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [],

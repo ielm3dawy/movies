@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import '../models/movie.dart';
-import 'movie_details_screen.dart';
+import '../../../../models (will be deleted)/movie.dart';
+import '../../../movie_screen/movie_details_screen.dart';
 
 class WatchListScreen extends StatefulWidget {
   @override
@@ -16,12 +16,7 @@ class _WatchListScreenState extends State<WatchListScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('Watch List', style: TextStyle(color: Colors.yellow)),
-        backgroundColor: Colors.black,
-      ),
-      body: ListView(
+    return ListView(
         children: watchlist.map((movie) {
           return ListTile(
             leading: Image.network(
@@ -48,7 +43,6 @@ class _WatchListScreenState extends State<WatchListScreen> {
             },
           );
         }).toList(),
-      ),
-    );
+      );
   }
 }

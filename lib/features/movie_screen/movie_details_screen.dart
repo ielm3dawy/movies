@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:movies_app/core/config/color_palette.dart';
 import 'package:youtube_player_flutter/youtube_player_flutter.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
-import '../services/api_service.dart';
+import '../../services (will be deleted)/api_service.dart';
 
 class MovieDetailsScreen extends StatefulWidget {
   final int movieId;
@@ -56,7 +57,7 @@ class _MovieDetailsScreenState extends State<MovieDetailsScreen> {
       if (videoId != null && videoId.isNotEmpty) {
         _youtubeController = YoutubePlayerController(
           initialVideoId: videoId,
-          flags: YoutubePlayerFlags(autoPlay: true, mute: false),
+          flags: const YoutubePlayerFlags(autoPlay: true, mute: false),
         );
         setState(() {});
       } else {
@@ -78,11 +79,11 @@ class _MovieDetailsScreenState extends State<MovieDetailsScreen> {
     return Scaffold(
       backgroundColor: Colors.black,
       appBar: AppBar(
-        title: Text('Movie Details', style: TextStyle(color: Colors.yellow)),
+        title: const Text('Movie Details', style: TextStyle(color: ColorPalette.primaryColor)),
         backgroundColor: Colors.black,
       ),
       body: movieDetails == null
-          ? Center(child: CircularProgressIndicator())
+          ? const Center(child: CircularProgressIndicator())
           : SingleChildScrollView(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -105,7 +106,7 @@ class _MovieDetailsScreenState extends State<MovieDetailsScreen> {
         : Container(
       height: 200,
       color: Colors.grey,
-      child: Center(
+      child: const Center(
         child: Text('No video available', style: TextStyle(color: Colors.white)),
       ),
     );
@@ -119,9 +120,9 @@ class _MovieDetailsScreenState extends State<MovieDetailsScreen> {
         children: [
           Text(
             movieDetails!['title'] ?? '',
-            style: TextStyle(color: Colors.white, fontSize: 22, fontWeight: FontWeight.bold),
+            style: const TextStyle(color: Colors.white, fontSize: 22, fontWeight: FontWeight.bold),
           ),
-          SizedBox(height: 10),
+          const SizedBox(height: 10),
           RatingBar.builder(
             initialRating: movieDetails?['vote_average'] != null
                 ? (movieDetails!['vote_average'] / 2)
@@ -131,12 +132,12 @@ class _MovieDetailsScreenState extends State<MovieDetailsScreen> {
             allowHalfRating: true,
             itemCount: 5,
             itemSize: 16,
-            itemBuilder: (context, _) => Icon(Icons.star, color: Colors.amber),
+            itemBuilder: (context, _) => const Icon(Icons.star, color: Colors.amber),
             onRatingUpdate: (rating) {},
             ignoreGestures: true,
           ),
-          SizedBox(height: 10),
-          Text(movieDetails!['overview'] ?? '', style: TextStyle(color: Colors.white)),
+          const SizedBox(height: 10),
+          Text(movieDetails!['overview'] ?? '', style: const TextStyle(color: Colors.white)),
         ],
       ),
     );
@@ -148,8 +149,8 @@ class _MovieDetailsScreenState extends State<MovieDetailsScreen> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text('More Like This', style: TextStyle(color: Colors.yellow, fontSize: 20, fontWeight: FontWeight.bold)),
-          SizedBox(height: 10),
+          const Text('More Like This', style: TextStyle(color: ColorPalette.primaryColor, fontSize: 20, fontWeight: FontWeight.bold)),
+          const SizedBox(height: 10),
           _buildSimilarMoviesList(),
         ],
       ),
@@ -158,7 +159,7 @@ class _MovieDetailsScreenState extends State<MovieDetailsScreen> {
 
   Widget _buildSimilarMoviesList() {
     return similarMovies.isEmpty
-        ? Center(child: Text('No similar movies found', style: TextStyle(color: Colors.white)))
+        ? const Center(child: Text('No similar movies found', style: TextStyle(color: Colors.white)))
         : SizedBox(
       height: 200,
       child: ListView.builder(
@@ -178,7 +179,7 @@ class _MovieDetailsScreenState extends State<MovieDetailsScreen> {
               );
             },
             child: Container(
-              margin: EdgeInsets.only(right: 10),
+              margin: const EdgeInsets.only(right: 10),
               width: 120,
               decoration: BoxDecoration(
                 color: Colors.grey[800],
