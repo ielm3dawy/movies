@@ -7,6 +7,8 @@ import '../../services (will be deleted)/api_service.dart';
 class MovieDetailsScreen extends StatefulWidget {
   final int movieId;
 
+
+
   MovieDetailsScreen({required this.movieId});
 
   @override
