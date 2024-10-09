@@ -1,9 +1,10 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:movies_app/core/config/page_route_names.dart';
-import 'package:movies_app/main.dart';
 
 class SplashScreen extends StatelessWidget {
+  const SplashScreen({super.key});
+
   @override
   Widget build(BuildContext context) {
     // استخدام WidgetsBinding للتأكد من تنفيذ Timer بعد بناء الواجهة

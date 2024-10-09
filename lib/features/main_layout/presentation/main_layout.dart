@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:movies_app/features/main_layout/presentation/search/search_screen.dart';
-import 'package:movies_app/features/main_layout/presentation/watch_list/watch%20_list_screen.dart';
+import 'package:movies_app/features/main_layout/presentation/watch_list/watch_list_screen.dart';
 
 import 'categories/browse_categories_screen.dart';
 import 'home/home_screen.dart';
 
 class MainLayout extends StatefulWidget {
+  const MainLayout({super.key});
+
   @override
   State<MainLayout> createState() => _MainLayoutState();
 }
@@ -13,11 +15,11 @@ class MainLayout extends StatefulWidget {
 class _MainLayoutState extends State<MainLayout> {
   int currentIndex = 0;
 
-  final List<Widget> screens = [
-    HomeScreen(),
-    SearchScreen(),
-    BrowseCategoriesScreen(),
-    WatchListScreen(),
+  final List<Widget> screens = <Widget>[
+    const HomeScreen(),
+    const SearchScreen(),
+    const BrowseCategoriesScreen(),
+    const WatchListScreen(),
   ];
 
   final List<String> _title = [
@@ -31,6 +33,8 @@ class _MainLayoutState extends State<MainLayout> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        // titleSpacing: 25,
+        centerTitle: true,
         title: Text(_title[currentIndex]),
       ),
       body: screens[currentIndex],

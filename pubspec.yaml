@@ -21,6 +21,7 @@ dependencies:
   dartz: ^0.10.1
   flutter_bloc: ^8.1.6
   cached_network_image: ^3.4.1
+  shared_preferences: ^2.3.2
 
 
   cupertino_icons: ^1.0.8
@@ -36,6 +37,7 @@ flutter:
   uses-material-design: true
 
   assets:
+    - assets/icons/
     - assets/movies.png
     - assets/splash.png
 

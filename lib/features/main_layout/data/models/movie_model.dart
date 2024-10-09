@@ -18,7 +18,7 @@ class MovieModel extends MovieData {
         adult: json["adult"],
         language: json["original_language"],
         title: json["title"],
-        posterPath: json["poster_path"],
+        posterPath: json["poster_path"] ?? "",
         overview: json["overview"],
         releaseDate: json["release_date"],
         voteAverage: json["vote_average"],

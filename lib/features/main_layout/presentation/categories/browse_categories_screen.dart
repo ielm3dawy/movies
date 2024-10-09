@@ -4,55 +4,10 @@ import 'package:movies_app/core/config/page_route_names.dart';
 import 'package:movies_app/features/main_layout/domain/entities/category_data.dart';
 import 'package:movies_app/features/main_layout/presentation/manager/main_layout_cubit.dart';
 import 'package:movies_app/features/main_layout/presentation/manager/main_layout_states.dart';
-import '../../../../services (will be deleted)/api_service.dart';
-import 'selected_category_screen.dart';
+import '../../../../core/config/color_palette.dart';
 
-class BrowseCategoriesScreen extends StatefulWidget {
-  @override
-  _BrowseCategoriesScreenState createState() => _BrowseCategoriesScreenState();
-}
-
-class _BrowseCategoriesScreenState extends State<BrowseCategoriesScreen> {
-  final ApiService apiService = ApiService();
-  List<dynamic> genres = [];
-  Map<int, String> genrePosters = {};
-
-  @override
-  void initState() {
-    super.initState();
-    _fetchGenresWithPosters();
-  }
-
-  void _fetchGenresWithPosters() async {
-    try {
-      final fetchedGenres = await apiService.fetchGenres();
-      setState(() {
-        genres = fetchedGenres;
-      });
-      _fetchAllGenrePosters(fetchedGenres);
-    } catch (e) {
-      print('Error fetching genres: $e');
-    }
-  }
-
-  void _fetchAllGenrePosters(List<dynamic> fetchedGenres) {
-    for (var genre in fetchedGenres) {
-      _fetchGenrePoster(genre['id']);
-    }
-  }
-
-  void _fetchGenrePoster(int genreId) async {
-    try {
-      final movies = await apiService.fetchMoviesByGenre(genreId);
-      if (movies.isNotEmpty) {
-        setState(() {
-          genrePosters[genreId] = movies[10]['poster_path'];
-        });
-      }
-    } catch (e) {
-      print('Error fetching movies for genre $genreId: $e');
-    }
-  }
+class BrowseCategoriesScreen extends StatelessWidget {
+  const BrowseCategoriesScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -61,7 +16,7 @@ class _BrowseCategoriesScreenState extends State<BrowseCategoriesScreen> {
       switch (state) {
         case InitializeMainLayoutState():
           return const Center(
-            child: CircularProgressIndicator(),
+            child: CircularProgressIndicator(color: ColorPalette.primaryColor,),
           );
         case ErrorMainLayoutState():
           return Center(
@@ -88,12 +43,12 @@ class _BrowseCategoriesScreenState extends State<BrowseCategoriesScreen> {
       ),
       itemCount: categoriesList.length,
       itemBuilder: (context, index) {
-        return _buildGenreItem(categoriesList[index]);
+        return _buildGenreItem(context, categoriesList[index]);
       },
     );
   }
 
-  Widget _buildGenreItem(CategoryData categoryData) {
+  Widget _buildGenreItem(BuildContext context, CategoryData categoryData) {
     return GestureDetector(
       onTap: () {
         Navigator.pushNamed(
@@ -143,36 +98,6 @@ class _BrowseCategoriesScreenState extends State<BrowseCategoriesScreen> {
           ),
         ],
       ),
-    );
-  }
-
-  Widget _buildGenrePoster(String? posterPath) {
-    return ClipRRect(
-      borderRadius: BorderRadius.circular(10),
-      child: posterPath != null
-          ? Image.network(
-              'https://image.tmdb.org/t/p/w500$posterPath',
-              width: 120,
-              height: 150,
-              fit: BoxFit.cover,
-            )
-          : Container(
-              width: 120,
-              height: 150,
-              color: Colors.grey,
-            ),
-    );
-  }
-
-  Widget _buildGenreName(String genreName) {
-    return Text(
-      genreName,
-      style: const TextStyle(
-        color: Colors.white,
-        fontSize: 14,
-        fontWeight: FontWeight.bold,
-      ),
-      textAlign: TextAlign.center,
     );
   }
 }

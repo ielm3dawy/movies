@@ -2,14 +2,18 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:movies_app/features/main_layout/presentation/manager/main_layout_cubit.dart';
 import 'package:movies_app/features/main_layout/presentation/manager/main_layout_states.dart';
-import 'package:movies_app/features/main_layout/presentation/search/widgets/search_body_widget.dart';
+import 'package:movies_app/features/main_layout/presentation/widgets/movies_vertical_slide_show.dart';
+
 import '../../../../core/config/color_palette.dart';
-import '../../../../core/services/service_locator.dart';
-import '../manager/search_cubit.dart';
 
-class SearchScreen extends StatelessWidget {
-  const SearchScreen({super.key});
+class WatchListScreen extends StatefulWidget {
+  const WatchListScreen({super.key});
 
+  @override
+  State<WatchListScreen> createState() => _WatchListScreenState();
+}
+
+class _WatchListScreenState extends State<WatchListScreen> {
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<MainLayoutCubit, MainLayoutState>(
@@ -17,9 +21,10 @@ class SearchScreen extends StatelessWidget {
         switch (state) {
           case InitializeMainLayoutState():
             return const Center(
-              child: CircularProgressIndicator(color: ColorPalette.primaryColor,),
+              child: CircularProgressIndicator(
+                color: ColorPalette.primaryColor,
+              ),
             );
-
           case ErrorMainLayoutState():
             return Center(
               child: Text(
@@ -29,9 +34,9 @@ class SearchScreen extends StatelessWidget {
             );
 
           case SuccessMainLayoutState():
-            return BlocProvider<SearchCubit>(
-              create: (context) => sl<SearchCubit>(),
-              child: const SearchBodyWidget(),
+            return MoviesVerticalSlideShow(
+              movies: context.read<MainLayoutCubit>().watchListMovies,
+              height: 180,
             );
         }
       },

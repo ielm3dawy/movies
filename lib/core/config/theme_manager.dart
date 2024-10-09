@@ -4,7 +4,7 @@ import 'package:movies_app/core/config/color_palette.dart';
 class ApplicationThemeManager {
   static var darkTheme = ThemeData(
     fontFamily: "Poppins",
-    scaffoldBackgroundColor: Colors.transparent,
+    scaffoldBackgroundColor: Colors.black,
     appBarTheme: const AppBarTheme(
         color: Colors.black,
         titleTextStyle: TextStyle(
