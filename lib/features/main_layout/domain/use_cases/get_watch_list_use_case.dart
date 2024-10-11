@@ -1,15 +1,35 @@
 import 'package:dartz/dartz.dart';
-import 'package:movies_app/features/main_layout/domain/repositories/watch_list_repositories.dart';
+import 'package:movies_app/features/main_layout/domain/repositories/movie_repositories.dart';
 
 import '../entities/movie_data.dart';
 
-class GetWatchListUseCase{
+class GetWatchListUseCase {
+  final MovieRepositories _movieRepositories;
 
-  final WatchListRepositories _watchListRepositories;
+  GetWatchListUseCase(this._movieRepositories);
 
-  GetWatchListUseCase(this._watchListRepositories);
+  Future<Either<String, List<MovieData>>> execute(List<int> watchListIDs) async {
+    try {
+      final apiCalls = watchListIDs
+          .map((movieID) => _movieRepositories.getMovie(movieID))
+          .toList();
 
-  Future<Either<String, List<MovieData>>> execute(List<int> watchListIDs) async{
-    return await _watchListRepositories.getWatchList(watchListIDs);
+      final result = await Future.wait(apiCalls);
+
+      List<MovieData> watchlist = [];
+      for (var res in result) {
+        res.fold(
+          (error) {
+            return Left(error);
+          },
+          (movie) {
+            watchlist.add(movie);
+          },
+        );
+      }
+      return Right(watchlist);
+    } catch (e) {
+      return Left(e.toString());
+    }
   }
 }

@@ -14,9 +14,7 @@ import '../../../../core/services/service_locator.dart';
 
 class MainLayoutCubit extends Cubit<MainLayoutState> {
   MainLayoutCubit() : super(InitializeMainLayoutState()) {
-    getMoviesLists();
-    getCategoriesList();
-    loadWatchList();
+    initialize();
   }
 
   int selectedCategoryIndex = 0;
@@ -32,6 +30,19 @@ class MainLayoutCubit extends Cubit<MainLayoutState> {
   List<CategoryData> get categoriesList => _categoriesList;
 
   List<MovieData> get watchListMovies => _watchListMovies;
+
+  Future<void> initialize() async {
+    try {
+      await Future.wait([
+        loadWatchList(),
+        getMoviesLists(),
+        getCategoriesList(),
+      ]);
+      emit(SuccessMainLayoutState());
+    } catch (e) {
+      emit(ErrorMainLayoutState(e.toString()));
+    }
+  }
 
   void loading() {
     emit(InitializeMainLayoutState());
@@ -62,13 +73,16 @@ class MainLayoutCubit extends Cubit<MainLayoutState> {
         upcomingMovies = moviesMap["upcoming"] ?? [];
         topRatedMovies = moviesMap["topRated"] ?? [];
         focusedMovieIdx = Random().nextInt(20);
-        final urlRes = await sl<GetMovieTrailerUseCase>().execute(popularMovies[focusedMovieIdx].id);
-        urlRes.fold((error) {
-          emit(ErrorMainLayoutState(error));
-        }, (movieUrl) {
-          focusedMovieTrailerUrl = movieUrl;
-          emit(SuccessMainLayoutState());
-        },);
+        final urlRes = await sl<GetMovieTrailerUseCase>()
+            .execute(popularMovies[focusedMovieIdx].id);
+        urlRes.fold(
+          (error) {
+            emit(ErrorMainLayoutState(error));
+          },
+          (movieUrl) {
+            focusedMovieTrailerUrl = movieUrl;
+          },
+        );
       },
     );
   }
@@ -76,9 +90,7 @@ class MainLayoutCubit extends Cubit<MainLayoutState> {
   Future<void> loadWatchList() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     List<String> data = prefs.getStringList("watchList") ?? [];
-    for (var e in data) {
-      _watchListIDs.add(int.parse(e));
-    }
+    _watchListIDs = data.map((e) => int.parse(e),).toList();
     final res = await sl<GetWatchListUseCase>().execute(_watchListIDs);
     res.fold(
       (error) {
@@ -99,6 +111,8 @@ class MainLayoutCubit extends Cubit<MainLayoutState> {
       "watchList",
       _watchListIDs.map((e) => e.toString()).toList(),
     );
+
+    emit(SuccessMainLayoutState());
   }
 
   void deleteMovieFromWatchList(MovieData movie) async {
@@ -111,9 +125,11 @@ class MainLayoutCubit extends Cubit<MainLayoutState> {
       "watchList",
       _watchListIDs.map((e) => e.toString()).toList(),
     );
+
+    emit(SuccessMainLayoutState());
   }
 
-  bool isInWatchlist(MovieData movie){
+  bool isInWatchlist(MovieData movie) {
     int idx = _watchListMovies.indexOf(movie);
     return idx == -1 ? false : true;
   }

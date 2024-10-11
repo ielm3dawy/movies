@@ -7,7 +7,6 @@ class SplashScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // استخدام WidgetsBinding للتأكد من تنفيذ Timer بعد بناء الواجهة
     WidgetsBinding.instance.addPostFrameCallback((_) {
       Timer(const Duration(seconds: 2), () {
         Navigator.pushReplacementNamed(context, PageRouteNames.mainLayout);
@@ -19,14 +18,8 @@ class SplashScreen extends StatelessWidget {
         children: [
           Positioned.fill(
             child: Image.asset(
-              'assets/splash.png', // تأكد من أن مسار الصورة صحيح
+              'assets/splash.png',
               fit: BoxFit.cover,
-            ),
-          ),
-          const Center(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [],
             ),
           ),
         ],

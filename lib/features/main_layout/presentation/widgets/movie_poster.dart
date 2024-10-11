@@ -58,7 +58,7 @@ class _MoviePosterState extends State<MoviePoster> {
                   borderRadius: BorderRadius.circular(10),
                   image: DecorationImage(
                     image: NetworkImage(imageUrl),
-                    fit: BoxFit.fitWidth,
+                    fit: BoxFit.fill,
                   ),
                 ),
               ),
@@ -66,9 +66,7 @@ class _MoviePosterState extends State<MoviePoster> {
             GestureDetector(
               onTap: () {
                 if (watchList) {
-                  context
-                      .read<MainLayoutCubit>()
-                      .deleteMovieFromWatchList(widget.movie);
+                  context.read<MainLayoutCubit>().deleteMovieFromWatchList(widget.movie);
                   watchList = false;
                 } else {
                   context.read<MainLayoutCubit>().addMovieToWatchlist(widget.movie);
@@ -78,13 +76,13 @@ class _MoviePosterState extends State<MoviePoster> {
               },
               child: watchList
                   ? Image.asset(
-                "assets/icons/checked_bookmark.png",
-                scale: 2.5,
-              )
+                      "assets/icons/checked_bookmark.png",
+                      scale: 2.5,
+                    )
                   : Image.asset(
-                "assets/icons/bookmark.png",
-                scale: 2.5,
-              ),
+                      "assets/icons/bookmark.png",
+                      scale: 2.5,
+                    ),
             ),
           ],
         ),

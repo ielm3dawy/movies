@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:movies_app/features/main_layout/domain/entities/movie_data.dart';
@@ -9,21 +7,22 @@ class MoviesVerticalSlideShow extends StatelessWidget {
   final List<MovieData> movies;
   final double height;
 
-  const MoviesVerticalSlideShow(
-      {super.key, required this.movies, required this.height});
+  const MoviesVerticalSlideShow({
+    super.key,
+    required this.movies,
+    required this.height,
+  });
 
   @override
   Widget build(BuildContext context) {
-    return Expanded(
-      child: ListView.builder(
-        itemCount: movies.length,
-        itemBuilder: (context, index) {
-          return MovieCard(
-            movie: movies[index],
-            height: height,
-          );
-        },
-      ),
+    return ListView.builder(
+      itemCount: movies.length,
+      itemBuilder: (context, index) {
+        return MovieCard(
+          movie: movies[index],
+          height: height,
+        );
+      },
     );
   }
 }

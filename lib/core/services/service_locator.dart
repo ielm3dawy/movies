@@ -10,13 +10,11 @@ import 'package:movies_app/features/main_layout/data/repositories_Imp/movie_trai
 import 'package:movies_app/features/main_layout/data/repositories_Imp/movies_repositories_imp.dart';
 import 'package:movies_app/features/main_layout/data/repositories_Imp/search_movies_repositories_imp.dart';
 import 'package:movies_app/features/main_layout/data/repositories_Imp/similar_movies_repositories_imp.dart';
-import 'package:movies_app/features/main_layout/data/repositories_Imp/watch_list_repositories_imp.dart';
 import 'package:movies_app/features/main_layout/domain/entities/movie_data.dart';
 import 'package:movies_app/features/main_layout/domain/repositories/categories_repositories.dart';
 import 'package:movies_app/features/main_layout/domain/repositories/movies_repositories.dart';
 import 'package:movies_app/features/main_layout/domain/repositories/search_movies_repositories.dart';
 import 'package:movies_app/features/main_layout/domain/repositories/similar_movies_repositories.dart';
-import 'package:movies_app/features/main_layout/domain/repositories/watch_list_repositories.dart';
 import 'package:movies_app/features/main_layout/domain/use_cases/get_category_use_case.dart';
 import 'package:movies_app/features/main_layout/domain/use_cases/get_movie_trailer_use_case.dart';
 import 'package:movies_app/features/main_layout/domain/use_cases/get_movies_use_case.dart';
@@ -29,6 +27,8 @@ import 'package:movies_app/features/main_layout/presentation/manager/search_cubi
 
 import '../../features/main_layout/data/data_source/top_rated_movies_data_source.dart';
 import '../../features/main_layout/data/data_source/upcoming_movies_data_source.dart';
+import '../../features/main_layout/data/repositories_Imp/movie_repositories_imp.dart';
+import '../../features/main_layout/domain/repositories/movie_repositories.dart';
 import '../../features/main_layout/domain/repositories/movie_trailer_repositories.dart';
 
 final sl = GetIt.instance;
@@ -42,7 +42,7 @@ void setup() {
     () => SearchCubit(),
   );
   sl.registerFactoryParam<MovieCubit, MovieData, void>(
-    (movieData, _) => MovieCubit(movieData: movieData),
+        (movieData, _) => MovieCubit(movieData: movieData),
   );
 
   // Use Case
@@ -81,8 +81,8 @@ void setup() {
   sl.registerLazySingleton<MovieTrailerRepositories>(
     () => MovieTrailerRepositoriesImp(sl()),
   );
-  sl.registerLazySingleton<WatchListRepositories>(
-    () => WatchListRepositoriesImp(sl()),
+  sl.registerLazySingleton<MovieRepositories>(
+    () => MovieRepositoriesImp(sl()),
   );
 
   // Date Source

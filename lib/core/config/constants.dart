@@ -1,4 +1,4 @@
 class Constants {
   static const String baseUrl = 'https://api.themoviedb.org/3';
-  static const String apiKey = '4cd13bc715cb348bbad54a9b2ece43b0';
+  static const String apiKey = '6569dbd3e881fe38beb5cf3a9b642ed4';
 }

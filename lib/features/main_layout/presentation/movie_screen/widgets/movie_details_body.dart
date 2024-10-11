@@ -21,12 +21,6 @@ class MovieDetailsBody extends StatefulWidget {
 }
 
 class _MovieDetailsBodyState extends State<MovieDetailsBody> {
-  @override
-  void dispose() {
-    context.read<MovieCubit>().youtubeController?.pause();
-    context.read<MovieCubit>().youtubeController?.dispose();
-    super.dispose();
-  }
 
   @override
   Widget build(BuildContext context) {
